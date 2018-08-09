@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 function runUserCode(testFile) {
   return new Promise((resolve, reject) => {
     exec(`mocha ${testFile}`, { timeout: 10000 }, (err, stdout, stderr) => {
-      // delete new test file?
+      // delete new test file after running?
       if (err !== null && stdout === '') {
         const output = stderr !== '' ? stderr : 'Your code timed out.';
         reject(output);
@@ -28,6 +28,7 @@ function runUserCode(testFile) {
 
 function buildTestFile(code) {
   code = `${code}\n`;
+  // remove try catch blocks?
   try {
     const fileName = 'testMe.js';
     fs.writeFileSync('testMe.js', code, 'utf8', err => {
@@ -55,8 +56,6 @@ app.get('/', (req, res) => {
 
 app.post('/', async (req, res, next) => {
   try {
-    console.log('REQ.BODY.CODE----', req.body.code);
-    // write a file with the user code??
     const testFile = await buildTestFile(req.body.code);
     const result = await runUserCode(testFile);
     res.send(result);
