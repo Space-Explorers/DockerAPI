@@ -1,0 +1,22 @@
+{
+  "name": "docker-js-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node api.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.3",
+    "chai": "^4.1.2",
+    "express": "^4.16.3",
+    "mocha": "^5.2.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.9.0"
+  }
+}
