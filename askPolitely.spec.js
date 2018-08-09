@@ -1,17 +1,5 @@
 const { expect } = require('chai');
 
-function askPolitely(sentence) {
-  if (sentence.slice(-1) === '?') {
-    if (sentence.slice(-5) === 'please?') {
-      return sentence;
-    } else {
-      return sentence.slice(0, -1) + ' please?';
-    }
-  } else {
-    return sentence;
-  }
-}
-
 describe('askPolitely', function() {
   it('askPolitely is a function', function() {
     expect(askPolitely).to.be.a('function');
