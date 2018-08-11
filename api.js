@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 
 function runUserCode(testFile) {
   return new Promise((resolve, reject) => {
-    exec(`mocha ${testFile}`, { timeout: 5000 }, (err, stdout, stderr) => {
+    exec(`mocha ${testFile}`, { timeout: 10000 }, (err, stdout, stderr) => {
       // delete new test file after running?
       // where do we add Docker build and run commands?
       if (err !== null && stdout === '') {
@@ -28,29 +28,28 @@ function runUserCode(testFile) {
   });
 }
 
-function buildTestFile(code, specsFile) {
+function buildTestFile(code, specs) {
+
   code = `${code}\n`;
+  // console.log(specs)
   // remove try catch blocks?
-  try {
-    const fileName = 'testMe.js';
-    fs.writeFileSync('testMe.js', code, 'utf8', err => {
-      if (err) throw err;
-      console.log('new file success!');
-    });
-    // eventually comment out below?
-    const specs = fs.readFileSync('askPolitely.spec.js', (err, data) => {
-      if (err) throw err;
-      console.log('read file success!');
-      return data;
-    });
-    fs.appendFileSync('testMe.js', specsFile, err => {
-      if (err) throw err;
-      console.log('append file success!');
-    });
-    return fileName;
-  } catch (err) {
-    console.error(err);
-  }
+  const fileName = 'testMe.js';
+  fs.writeFileSync('testMe.js', code, 'utf8', err => {
+    if (err) throw err;
+    console.log('new file success!');
+  });
+  // eventually comment out below ?
+  // specs = fs.readFileSync('askPolitely.spec.js', (err, data) => {
+  //   if (err) throw err;
+  //   console.log('read file success!');
+  //   return data;
+  // });
+  // console.log(specs)
+  fs.appendFileSync('testMe.js', specs, err => {
+    if (err) throw err;
+    console.log('append file success!');
+  });
+  return fileName;
 }
 
 app.get('/', (req, res) => {
@@ -59,8 +58,7 @@ app.get('/', (req, res) => {
 
 app.post('/', async (req, res, next) => {
   try {
-    // req.body.specs also passed in below
-    const testFile = await buildTestFile(req.body.code);
+    const testFile = await buildTestFile(req.body.code, req.body.specs);
     const result = await runUserCode(testFile);
     res.send(result);
   } catch (err) {
